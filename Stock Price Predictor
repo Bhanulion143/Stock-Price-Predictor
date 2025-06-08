@@ -1,0 +1,99 @@
+import { useState, useEffect } from 'react';
+import MetricsCard from '../components/MetricsCard';
+import StockChart from '../components/StockChart';
+import PredictionModel from '../components/PredictionModel';
+import StockSearch from '../components/StockSearch';
+import { generateStockData } from '../utils/stockDataGenerator';
+import { calculateMetrics } from '../utils/metrics';
+
+const Index = () => {
+  const [selectedStock, setSelectedStock] = useState('AAPL');
+  const [stockData, setStockData] = useState([]);
+  const [metrics, setMetrics] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [predictions, setPredictions] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    // Simulate async data fetch
+    setTimeout(() => {
+      const data = generateStockData(selectedStock, 365);
+      setStockData(data);
+      setMetrics(calculateMetrics(data));
+      setIsLoading(false);
+      setPredictions([]); // Reset predictions on stock change
+    }, 800);
+  }, [selectedStock]);
+
+  const handlePrediction = (preds) => {
+    setPredictions(preds);
+  };
+
+  return (
+    <div className="min-h-screen bg-background py-10 px-4">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <StockSearch
+          onStockSelect={setSelectedStock}
+          selectedStock={selectedStock}
+        />
+
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400"></div>
+          </div>
+        ) : (
+          stockData.length > 0 && (
+            <div className="space-y-8">
+              {/* Metrics Cards */}
+              {metrics && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <MetricsCard
+                    title="Current Price"
+                    value={`$${metrics.currentPrice.toFixed(2)}`}
+                    change={metrics.dailyChange}
+                    changePercent={metrics.dailyChangePercent}
+                  />
+                  <MetricsCard
+                    title="52W High"
+                    value={`$${metrics.yearHigh.toFixed(2)}`}
+                    subtitle="Yearly High"
+                  />
+                  <MetricsCard
+                    title="52W Low"
+                    value={`$${metrics.yearLow.toFixed(2)}`}
+                    subtitle="Yearly Low"
+                  />
+                  <MetricsCard
+                    title="Volatility"
+                    value={`${metrics.volatility.toFixed(2)}%`}
+                    subtitle="Standard Deviation"
+                  />
+                </div>
+              )}
+
+              {/* Chart and Prediction */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                  <StockChart
+                    data={stockData}
+                    predictions={predictions}
+                    symbol={selectedStock}
+                  />
+                </div>
+                <div>
+                  <PredictionModel
+                    data={stockData}
+                    onPrediction={handlePrediction}
+                    symbol={selectedStock}
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Index;
