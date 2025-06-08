@@ -6,7 +6,13 @@ A **full-stack** stock prediction application with:
 - Machine learning backend (Python) for price forecasting
 - Support for multiple models (Linear Regression, LSTM)
 
+
+
 ![React](https://img.shields.io/badge/React-18.2+-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0+-red)
+![Pandas](https://img.shields.io/badge/Pandas-1.3+-brightgreen)
+
 
 
 
@@ -30,3 +36,33 @@ A **full-stack** stock prediction application with:
 | Tailwind CSS           | TensorFlow/Keras     |
 | Recharts               | scikit-learn         |
 | Vite (build tool)      | FastAPI/Flask        |
+
+Project Structure
+text
+stock-price-predictor/
+├── frontend/               # React app
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── utils/          # Data generators
+│   │   └── App.jsx         # Main entry
+├── backend/                # Python ML API
+│   ├── models/             # Trained models
+│   ├── app.py              # Flask/FastAPI server
+│   └── requirements.txt
+├── screenshots/            # App previews
+└── README.md
+Usage
+Search stocks by symbol (e.g., AAPL, TSLA)
+
+View historical data in interactive chart
+
+Run predictions:
+Select model (Linear Regression/LSTM)
+
+Choose forecast period
+
+Analyze metrics:
+
+Price trends
+
+Volatility indicators
